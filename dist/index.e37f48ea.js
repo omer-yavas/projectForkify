@@ -570,7 +570,7 @@ const controlSearchResults = async function() {
         if (!query) return;
         await _modelJs.loadSearchResults(query);
         // resultsView.render(model.state.search.results);
-        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage(4));
+        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage(1));
         (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
     } catch (err) {
         console.log(err);
@@ -2902,35 +2902,30 @@ class PaginationView extends (0, _viewDefault.default) {
         console.log(this._data.page);
         const curPage = this._data.page;
         const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
-        //Page 1 , there are other pages
-        if (numPages > 1 && this._data.page === 1) return `<button class="btn--inline pagination__btn--next">
-      <span>${curPage + 1}</span>
-      <svg class="search__icon">
-        <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
-      </svg>
-    </button>`;
+        //Page is 1 and there are other pages
+        if (numPages > 1 && this._data.page === 1) return this._generateMarkupButton("next", curPage);
         //Last page
-        if (this._data.page === numPages && numPages > 1) return `<button class="btn--inline pagination__btn--prev">
-      <svg class="search__icon">
-        <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
-      </svg>
-      <span>${curPage - 1}</span>
-    </button>`;
-        if (this._data.page < numPages) return `<button class="btn--inline pagination__btn--prev">
-      <svg class="search__icon">
-        <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
-      </svg>
-      <span>${curPage - 1}</span>
-    </button>
-    <button class="btn--inline pagination__btn--next">
-      <span>${curPage + 1}</span>
-      <svg class="search__icon">
-        <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
-      </svg>
-    </button>`;
+        if (this._data.page === numPages && numPages > 1) return this._generateMarkupButton("prev", curPage);
         //cok sayfa ara
+        if (this._data.page < numPages) return this._generateMarkupButton("both", curPage);
         return " ";
-    //son sayfa
+    }
+    _generateMarkupButton(prevOrNext, curPage) {
+        const previous = `<button class="btn--inline pagination__btn--prev">
+        <svg class="search__icon">
+          <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-left"></use>
+        </svg>
+        <span>${curPage - 1}</span>
+      </button>`;
+        const next = `<button class="btn--inline pagination__btn--next">
+        <span>${curPage + 1}</span>
+        <svg class="search__icon">
+          <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-right"></use>
+        </svg>
+        </button>`;
+        if (prevOrNext === "prev") return previous;
+        if (prevOrNext === "next") return next;
+        if (prevOrNext === "both") return `${previous} ${next}`;
     }
 }
 exports.default = new PaginationView();

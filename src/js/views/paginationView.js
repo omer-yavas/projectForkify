@@ -11,43 +11,38 @@ class PaginationView extends View {
     const numPages = Math.ceil(
       this._data.results.length / this._data.resultsPerPage
     );
-    //Page 1 , there are other pages
+    //Page is 1 and there are other pages
     if (numPages > 1 && this._data.page === 1) {
-      return `<button class="btn--inline pagination__btn--next">
-      <span>${curPage + 1}</span>
-      <svg class="search__icon">
-        <use href="${icons}#icon-arrow-right"></use>
-      </svg>
-    </button>`;
+      return this._generateMarkupButton('next', curPage);
     }
     //Last page
     if (this._data.page === numPages && numPages > 1) {
-      return `<button class="btn--inline pagination__btn--prev">
-      <svg class="search__icon">
-        <use href="${icons}#icon-arrow-left"></use>
-      </svg>
-      <span>${curPage - 1}</span>
-    </button>`;
+      return this._generateMarkupButton('prev', curPage);
     }
-
-    if (this._data.page < numPages) {
-      return `<button class="btn--inline pagination__btn--prev">
-      <svg class="search__icon">
-        <use href="${icons}#icon-arrow-left"></use>
-      </svg>
-      <span>${curPage - 1}</span>
-    </button>
-    <button class="btn--inline pagination__btn--next">
-      <span>${curPage + 1}</span>
-      <svg class="search__icon">
-        <use href="${icons}#icon-arrow-right"></use>
-      </svg>
-    </button>`;
-    }
-
     //cok sayfa ara
+    if (this._data.page < numPages) {
+      return this._generateMarkupButton('both', curPage);
+    }
+
     return ' ';
-    //son sayfa
+  }
+
+  _generateMarkupButton(prevOrNext, curPage) {
+    const previous = `<button class="btn--inline pagination__btn--prev">
+        <svg class="search__icon">
+          <use href="${icons}#icon-arrow-left"></use>
+        </svg>
+        <span>${curPage - 1}</span>
+      </button>`;
+    const next = `<button class="btn--inline pagination__btn--next">
+        <span>${curPage + 1}</span>
+        <svg class="search__icon">
+          <use href="${icons}#icon-arrow-right"></use>
+        </svg>
+        </button>`;
+    if (prevOrNext === 'prev') return previous;
+    if (prevOrNext === 'next') return next;
+    if (prevOrNext === 'both') return `${previous} ${next}`;
   }
 }
 
