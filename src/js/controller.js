@@ -7,7 +7,7 @@ import paginationView from './views/paginationView.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime';
-import paginationView from './views/paginationView.js';
+
 // Parcel ile ilgili birşey, Js ile değil.
 if (module.hot) {
   module.hot.accept();
@@ -58,8 +58,15 @@ const controlPagination = function (goToPage) {
   paginationView.render(model.state.search);
 };
 
+const controlServings = function () {
+  model.updateServings(8);
+  //yeni recipe yi göster
+  recipeView.render(model.state.recipe);
+};
+
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
 };
