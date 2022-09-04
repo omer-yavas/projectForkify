@@ -23,7 +23,9 @@ const controlRecipes = async function () {
     const id = window.location.hash.slice(1);
 
     if (!id) return;
-    recipeView.renderSpinner(recipeContainer);
+    recipeView.renderSpinner();
+    //-----0-Update results view to mark selected search result
+    resultsView.update(model.getSearchResultsPage());
     //--1-Loading Recipe-----------------------------------------------------------------
     await model.loadRecipe(id);
 
@@ -58,10 +60,11 @@ const controlPagination = function (goToPage) {
   paginationView.render(model.state.search);
 };
 
-const controlServings = function () {
-  model.updateServings(8);
+const controlServings = function (newServings) {
+  model.updateServings(newServings);
   //yeni recipe yi göster
-  recipeView.render(model.state.recipe);
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
 const init = function () {
