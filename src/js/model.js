@@ -10,6 +10,7 @@ export const state = {
     //resultsPerPage=RES_PER_PAGE olarak tanımlamıştık(>>config.js), ancak çalışmadığı için manuel değer girdik.
     resultsPerPage: 10,
   },
+  bookmarks: [],
 };
 
 export const loadRecipe = async function (id) {
@@ -27,6 +28,9 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
+    if (state.bookmarks.some(bookmark => bookmark.id == id))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
   } catch (err) {
     console.error(`${err}***`);
   }
@@ -65,4 +69,18 @@ export const updateServings = function (newServing) {
     ing.quantity = (newServing / state.recipe.servings) * ing.quantity;
   });
   state.recipe.servings = newServing;
+};
+
+export const addBookmark = function (recipe) {
+  //Add bookmark
+  state.bookmarks.push(recipe);
+  //mark current recipe as bookmarked
+  if (state.recipe.id === recipe.id) state.recipe.bookmarked = true;
+};
+
+export const deleteBookmark = function (id) {
+  const index = state.bookmarks.findIndex(el => (el.id = id));
+  state.bookmarks.splice(index, 1);
+
+  if (id === state.recipe.id) state.recipe.bookmarked = false;
 };
